@@ -26,22 +26,23 @@ class Graph:
 def djikstra(graph: Graph, source: str):
     dist = {}
     prev = {}
-    Q = []
+    Q = PriorityQueue()
     for v in graph.vertices:
             dist[v] = 0 if v == source else float('inf')
             prev[v] = None
-            heapq.heappush(Q, (dist[v], v))
+            Q.add(v, dist[v])
 
 
-    while len(Q) > 0:
-        _, u = heapq.heappop(Q)
+    while len(Q.queue) > 0:
+        u = Q.pop()
         
-        for _, v in Q:
+        for p, v in Q.queue:
             if graph.edges.get((u, v)) != None:
                 alt = dist[u] + graph.edges[(u, v)]
                 if alt < dist[v]:
                     dist[v] = alt
                     prev[v] = u
+                    Q.update(v, dist[v])
         
     return dist, prev
     
